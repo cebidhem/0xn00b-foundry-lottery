@@ -20,7 +20,7 @@ contract RaffleTest is Test {
     uint32 callbackGasLimit;
     address linkTokenContract;
 
-    address public player = makeAddr("player");
+    address public PLAYER = makeAddr("player");
     uint256 constant STARTING_USER_BALANCE = 10 ether;
 
     /** Events */
@@ -41,7 +41,7 @@ contract RaffleTest is Test {
 
         ) = helperConfig.activeNetworkConfig();
         console.log("Raffle address: %s", address(raffle));
-        vm.deal(player, STARTING_USER_BALANCE);
+        vm.deal(PLAYER, STARTING_USER_BALANCE);
     }
 
     function testRaffleInitializesInOpenState() public view {
@@ -49,34 +49,34 @@ contract RaffleTest is Test {
     }
 
     function testRaffleRevertsWhenNotEnoughEthSent() public {
-        vm.prank(player);
+        vm.prank(PLAYER);
         vm.expectRevert(Raffle.Raffle__NotEnoughEthSent.selector);
         raffle.enterRaffle();
     }
 
     function testRaffleRecordsPlayer() public {
-        vm.prank(player);
+        vm.prank(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
         address playerRecorded = raffle.getPlayer(0);
-        assert(playerRecorded == player);
+        assert(playerRecorded == PLAYER);
     }
 
     function testEmitEventOnEntrance() public {
-        vm.prank(player);
+        vm.prank(PLAYER);
         vm.expectEmit(true, false, false, false, address(raffle));
-        emit EnteredRaffle(player);
+        emit EnteredRaffle(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
     }
 
     function testCantEnterWhenRaffleIsCalculating() public {
-        vm.prank(player);
+        vm.prank(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
         vm.warp(block.timestamp + interval + 1);
         vm.roll(block.number + 1);
         raffle.performUpkeep("");
 
         vm.expectRevert(Raffle.Raffle__RaffleIsCalculating.selector);
-        vm.prank(player);
+        vm.prank(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
     }
 
@@ -89,7 +89,7 @@ contract RaffleTest is Test {
     }
 
     function testCheckUpkeepFalseIfRaffleNotOpen() public {
-        vm.prank(player);
+        vm.prank(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
         vm.warp(block.timestamp + interval + 1);
         vm.roll(block.number + 1);
@@ -103,7 +103,7 @@ contract RaffleTest is Test {
     // testCheckUpkeepTrueWhenAllParamsAreMet
 
     function testPerformUpkeepOnlyRunIfCheckUpkeepIsTrue() public {
-        vm.prank(player);
+        vm.prank(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
         vm.warp(block.timestamp + interval + 1);
         vm.roll(block.number + 1);
@@ -127,7 +127,7 @@ contract RaffleTest is Test {
     }
 
     modifier raffleEnteredAndTimePassed() {
-        vm.prank(player);
+        vm.prank(PLAYER);
         raffle.enterRaffle{value: entranceFee}();
         vm.warp(block.timestamp + interval + 1);
         vm.roll(block.number + 1);
