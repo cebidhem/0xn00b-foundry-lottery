@@ -1,4 +1,5 @@
 ## 0xn00b-foundry-smart-contract-lottery
+[![codecov](https://codecov.io/gh/cebidhem/0xn00b-foundry-lottery/graph/badge.svg?token=8KNMBPUSIS)](https://codecov.io/gh/cebidhem/0xn00b-foundry-lottery)
 
 This README is largely copied from Cyfrin Solidity and adjusted.
 
