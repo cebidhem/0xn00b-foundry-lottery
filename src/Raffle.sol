@@ -134,9 +134,6 @@ contract Raffle is VRFConsumerBaseV2 {
                 uint256(s_raffleState)
             );
         }
-        if ((block.timestamp - s_lastTimestamp) < i_interval) {
-            revert();
-        }
         s_raffleState = RaffleState.CALCULATING;
         uint256 requestId = i_vrfCoordinator.requestRandomWords(
             i_gasLane,
